@@ -2,7 +2,7 @@ import type { Company } from "@/components/assistant/data";
 
 export const API_BASE_URL: string =
   (typeof import.meta !== "undefined" && import.meta.env?.["VITE_API_BASE_URL"]) ||
-  "http://localhost:8000";
+  "https://13-126-246-11.sslip.io";
 
 let baseUrl = API_BASE_URL;
 export const getApiBaseUrl = () => baseUrl;
