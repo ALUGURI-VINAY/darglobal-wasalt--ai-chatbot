@@ -447,12 +447,13 @@ export function ChatWindow({ threadId }: { threadId: string }) {
         <Button
           variant="ghost"
           size="icon"
-          aria-label="Clear conversation"
-          title="Clear conversation"
+          aria-label="Delete conversation"
+          title="Delete conversation"
           onClick={() => {
-            if (window.confirm("Clear this conversation?")) {
+            if (window.confirm("Delete this conversation?")) {
               stop();
-              a.updateThread(threadId, (t) => ({ ...t, messages: [] }));
+              a.deleteThread(threadId);
+              navigate({ to: "/" });
             }
           }}
         >

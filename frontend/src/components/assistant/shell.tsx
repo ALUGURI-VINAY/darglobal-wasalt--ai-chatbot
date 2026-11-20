@@ -27,6 +27,7 @@ import {
   Globe,
   Building2,
   Check,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -130,21 +131,55 @@ export function AppShell({ children }: { children: ReactNode }) {
         </nav>
         {!collapsed && (
           <div className="recent">
-            <div className="nav-label">
-              RECENT CONVERSATIONS <span>{a.threads.length}</span>
+            <div className="nav-label recent-header">
+              <span>RECENT CONVERSATIONS {a.threads.length > 0 && `(${a.threads.length})`}</span>
+              {a.threads.length > 0 && (
+                <button
+                  type="button"
+                  className="sidebar-clear-btn"
+                  title="Clear all conversations"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.confirm("Clear all conversation history?")) {
+                      a.clearHistory();
+                      navigate({ to: "/" });
+                    }
+                  }}
+                >
+                  Clear all
+                </button>
+              )}
             </div>
             {a.threads.length ? (
-              a.threads.slice(0, 5).map((t) => (
-                <Link
-                  key={t.id}
-                  to="/chat/$threadId"
-                  params={{ threadId: t.id }}
-                  className="recent-thread"
-                  onClick={() => setMobile(false)}
-                >
-                  <MessageSquare size={14} />
-                  <span>{t.title}</span>
-                </Link>
+              a.threads.slice(0, 8).map((t) => (
+                <div key={t.id} className="recent-thread-wrapper">
+                  <Link
+                    to="/chat/$threadId"
+                    params={{ threadId: t.id }}
+                    className="recent-thread"
+                    onClick={() => setMobile(false)}
+                  >
+                    <MessageSquare size={14} />
+                    <span>{t.title}</span>
+                  </Link>
+                  <button
+                    type="button"
+                    className="thread-delete-btn"
+                    title="Delete conversation"
+                    aria-label={`Delete ${t.title}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      a.deleteThread(t.id);
+                      if (path.includes(t.id)) {
+                        navigate({ to: "/" });
+                      }
+                    }}
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
               ))
             ) : (
               <p className="empty-recent">Your conversations will appear here.</p>
@@ -202,7 +237,6 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="header-divider" />
             <span className="header-company">
               {a.company}
-              <ChevronDown size={12} />
             </span>
           </div>
           <div className="header-right">

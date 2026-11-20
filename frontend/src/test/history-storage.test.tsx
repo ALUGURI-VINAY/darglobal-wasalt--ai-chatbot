@@ -22,6 +22,7 @@ function Harness() {
       <button onClick={() => a.setCompany("Wasalt")}>Wasalt</button>
       <button onClick={() => a.setTheme("Charcoal")}>Charcoal</button>
       <button onClick={() => a.clearHistory()}>Clear</button>
+      <button onClick={() => a.threads[0] && a.deleteThread(a.threads[0].id)}>DeleteFirst</button>
     </div>
   );
 }
@@ -124,5 +125,13 @@ describe("localStorage persistence", () => {
     expect(JSON.parse(stored(THREADS_STORAGE_KEY) || "[]")).toEqual([
       { id: "a", title: "Keep", company: "Wasalt", messages: [] },
     ]);
+  });
+
+  it("deletes a single thread with deleteThread", async () => {
+    renderProvider();
+    click("New");
+    await waitFor(() => expect(screen.getByTestId("threads")).toHaveTextContent("1"));
+    click("DeleteFirst");
+    await waitFor(() => expect(screen.getByTestId("threads")).toHaveTextContent("0"));
   });
 });

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MessageSquare, ArrowUpRight } from "lucide-react";
+import { MessageSquare, ArrowUpRight, Trash2 } from "lucide-react";
 import { AppShell } from "@/components/assistant/shell";
 import { useAssistant } from "@/components/assistant/context";
 import { Button } from "@/components/ui/button";
@@ -24,29 +24,65 @@ function Page() {
   return (
     <AppShell>
       <main className="content-page">
-        <div className="page-eyebrow">YOUR WORKSPACE</div>
-        <h1>Conversation history</h1>
+        <div className="history-header-bar">
+          <div>
+            <div className="page-eyebrow">YOUR WORKSPACE</div>
+            <h1>Conversation history</h1>
+          </div>
+          {a.threads.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="clear-history-button"
+              onClick={() => {
+                if (window.confirm("Are you sure you want to clear all conversation history?")) {
+                  a.clearHistory();
+                }
+              }}
+            >
+              <Trash2 size={15} />
+              Clear history
+            </Button>
+          )}
+        </div>
         <p className="page-intro">
-          Your real estate insights, all in one place. Current session only.
+          Your real estate insights, all in one place.{a.threads.length > 0 && ` (${a.threads.length} ${a.threads.length === 1 ? "conversation" : "conversations"})`}
         </p>
         {a.threads.length ? (
-          a.threads.map((t) => (
-            <Link
-              key={t.id}
-              to="/chat/$threadId"
-              params={{ threadId: t.id }}
-              className="history-row"
-            >
-              <MessageSquare />
-              <div>
-                <strong>{t.title}</strong>
-                <span>
-                  {t.company} · {t.messages.length} messages
-                </span>
+          <div className="history-list">
+            {a.threads.map((t) => (
+              <div key={t.id} className="history-item-wrapper">
+                <Link
+                  to="/chat/$threadId"
+                  params={{ threadId: t.id }}
+                  className="history-row"
+                >
+                  <MessageSquare />
+                  <div>
+                    <strong>{t.title}</strong>
+                    <span>
+                      {t.company} · {t.messages.length} messages
+                    </span>
+                  </div>
+                  <ArrowUpRight />
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  className="history-row-delete"
+                  title="Delete chat"
+                  aria-label={`Delete ${t.title}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    a.deleteThread(t.id);
+                  }}
+                >
+                  <Trash2 size={16} />
+                </Button>
               </div>
-              <ArrowUpRight />
-            </Link>
-          ))
+            ))}
+          </div>
         ) : (
           <div className="empty-history">
             <MessageSquare size={36} />

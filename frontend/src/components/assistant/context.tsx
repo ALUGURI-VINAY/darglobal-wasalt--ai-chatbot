@@ -108,6 +108,7 @@ const Context = createContext<{
   threads: Thread[];
   createThread: (question?: string) => string;
   updateThread: (id: string, update: (t: Thread) => Thread) => void;
+  deleteThread: (id: string) => void;
   clearHistory: () => void;
   settings: boolean;
   setSettings: (v: boolean) => void;
@@ -167,6 +168,14 @@ export function AssistantProvider({ children }: { children: ReactNode }) {
     removeStorage(THREADS_STORAGE_KEY);
     setThreads([]);
   }, []);
+  const deleteThread = useCallback((id: string) => {
+    setThreads((p) => {
+      const next = p.filter((t) => t.id !== id);
+      if (next.length) writeStorage(THREADS_STORAGE_KEY, JSON.stringify(next));
+      else removeStorage(THREADS_STORAGE_KEY);
+      return next;
+    });
+  }, []);
   const createThread = (question?: string) => {
     const id = crypto.randomUUID();
     setThreads((p) => [
@@ -191,6 +200,7 @@ export function AssistantProvider({ children }: { children: ReactNode }) {
         createThread,
         updateThread: (id, update) =>
           setThreads((p) => p.map((t) => (t.id === id ? update(t) : t))),
+        deleteThread,
         clearHistory,
         settings,
         setSettings,
