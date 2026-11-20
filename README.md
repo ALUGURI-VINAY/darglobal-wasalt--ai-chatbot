@@ -1,29 +1,42 @@
-# Welcome to your Lovable project
+﻿# DarGlobal × Wasalt Real Estate AI Chatbot — Frontend
 
-This project was built with [Lovable](https://lovable.dev).
+An intelligent real estate conversational assistant and property discovery workspace designed for **DarGlobal** and **Wasalt**.
 
-## Build with Lovable
+## Tech Stack & Architecture
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+- **Framework**: TanStack Start (Full-stack SSR / SPA framework built on Nitro & Vite)
+- **UI Library**: React 19 + TypeScript
+- **Styling**: Tailwind CSS v4 + Custom Luxury Theme Variables (Manrope typography)
+- **Component Primitives**: Radix UI (Dialog, Dropdown Menu, Popover, Tooltip, Accordion, ScrollArea)
+- **AI Elements**: Streamdown (progressive markdown & math streaming), Lucide React icons
+- **State & Routing**: TanStack React Router with type-safe file-based routing (`/chat/$threadId`, `/sources`, `/history`, `/about`)
+- **Data Persistence**: Client-side session and thread persistence via LocalStorage
+- **Streaming Client**: SSE (Server-Sent Events) reader via `ReadableStream` with automatic fallback to synchronous REST endpoints
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+## Getting Started
 
-## Development
+### Prerequisites
+- Node.js >= 20
+- npm >= 10
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+### Installation
+```bash
+npm install
+```
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+### Local Development
+```bash
+# Starts the Vite development server with Hot Module Replacement
 npm run dev
 ```
 
-## Built with
+### Building for Production
+```bash
+# Build for deployment (Vercel, Cloudflare, Node)
+npm run build
+```
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+## Environment Configuration
+
+Configure the backend API URL using the environment variable:
+- `VITE_API_BASE_URL`: Base URL of the FastAPI backend (e.g., `http://localhost:8000` for local or `https://api.yourdomain.com` for production).
